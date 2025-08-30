@@ -8,6 +8,11 @@
 body {
 	font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
 		Roboto, 'Helvetica Neue', Arial, sans-serif;
+	overflow: hidden;
+}
+
+html {
+	overflow: hidden;
 }
 
 /* Define font families for easy reference */

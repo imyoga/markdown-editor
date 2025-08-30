@@ -4,29 +4,29 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
-  title: 'Markdown Editor',
-  description: 'A live markdown editor with synchronized scrolling',
-  generator: 'v0.dev',
+	title: 'Markdown Editor',
+	description: 'A live markdown editor with synchronized scrolling',
+	generator: 'v0.dev',
 }
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode
+	children: React.ReactNode
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
-  )
+	return (
+		<html lang='en' suppressHydrationWarning className='h-full'>
+			<body className='h-full'>
+				<ThemeProvider
+					attribute='class'
+					defaultTheme='dark'
+					enableSystem={false}
+					disableTransitionOnChange
+				>
+					{children}
+					<Toaster />
+				</ThemeProvider>
+			</body>
+		</html>
+	)
 }

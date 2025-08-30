@@ -339,9 +339,9 @@ export default function MarkdownEditor() {
 	}, [markdown, toast])
 
 	return (
-		<div className='h-screen flex flex-col bg-background font-sans'>
+		<div className='h-screen flex flex-col bg-background font-sans overflow-hidden'>
 			{/* Header */}
-			<div className='border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+			<div className='border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0'>
 				<div className='flex items-center justify-between p-4'>
 					<div className='flex items-center gap-2'>
 						<FileText className='h-5 w-5' />
