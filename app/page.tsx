@@ -5,7 +5,7 @@ import type React from 'react'
 import { useState, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Upload, Copy, FileText, Download } from 'lucide-react'
+import { Upload, Copy, FileText, Download, Moon, Sun } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -210,6 +210,8 @@ This enhanced preview provides:
 export default function MarkdownEditor() {
 	const [markdown, setMarkdown] = useState(defaultMarkdown)
 	const [isScrolling, setIsScrolling] = useState(false)
+	const [editorTheme, setEditorTheme] = useState<'light' | 'dark'>('dark')
+	const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>('light')
 	const editorRef = useRef<HTMLTextAreaElement>(null)
 	const previewRef = useRef<HTMLDivElement>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -338,6 +340,14 @@ export default function MarkdownEditor() {
 		}
 	}, [markdown, toast])
 
+	const toggleEditorTheme = useCallback(() => {
+		setEditorTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+	}, [])
+
+	const togglePreviewTheme = useCallback(() => {
+		setPreviewTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+	}, [])
+
 	return (
 		<div className='h-screen flex flex-col bg-background font-sans overflow-hidden'>
 			{/* Header */}
@@ -381,18 +391,38 @@ export default function MarkdownEditor() {
 			<div className='flex-1 flex overflow-hidden'>
 				{/* Editor Pane */}
 				<div className='w-1/2 border-r flex flex-col'>
-					<div className='bg-muted/50 px-4 py-2 border-b'>
+					<div className='bg-muted/50 px-4 py-2 border-b flex items-center justify-between'>
 						<h2 className='text-sm font-medium text-muted-foreground tracking-wide'>
 							EDITOR
 						</h2>
+						<Button
+							variant='ghost'
+							size='sm'
+							onClick={toggleEditorTheme}
+							className='h-6 w-6 p-0'
+						>
+							{editorTheme === 'dark' ? (
+								<Sun className='h-3 w-3' />
+							) : (
+								<Moon className='h-3 w-3' />
+							)}
+						</Button>
 					</div>
-					<div className='flex-1 relative'>
+					<div
+						className={`flex-1 relative ${
+							editorTheme === 'dark' ? 'dark' : ''
+						}`}
+					>
 						<Textarea
 							ref={editorRef}
 							value={markdown}
 							onChange={(e) => setMarkdown(e.target.value)}
 							onScroll={() => syncScroll('editor')}
-							className='absolute inset-0 resize-none border-0 rounded-none focus-visible:ring-0 font-mono text-sm leading-relaxed p-4 bg-gray-50 dark:bg-gray-900'
+							className={`absolute inset-0 resize-none border-0 rounded-none focus-visible:ring-0 font-mono text-sm leading-relaxed p-4 ${
+								editorTheme === 'dark'
+									? 'bg-gray-900 text-gray-100'
+									: 'bg-gray-50 text-gray-900'
+							}`}
 							placeholder='Type your markdown here...'
 							style={{
 								lineHeight: '1.6',
@@ -407,18 +437,38 @@ export default function MarkdownEditor() {
 				</div>
 
 				{/* Preview Pane */}
-				<div className='w-1/2 flex flex-col bg-white dark:bg-gray-900'>
-					<div className='bg-gray-100 dark:bg-gray-800 px-4 py-2 border-b border-gray-200 dark:border-gray-700'>
-						<h2 className='text-sm font-medium text-gray-600 dark:text-gray-400 tracking-wide'>
+				<div className='w-1/2 flex flex-col'>
+					<div className='bg-muted/50 px-4 py-2 border-b flex items-center justify-between'>
+						<h2 className='text-sm font-medium text-muted-foreground tracking-wide'>
 							ENHANCED PREVIEW
 						</h2>
+						<Button
+							variant='ghost'
+							size='sm'
+							onClick={togglePreviewTheme}
+							className='h-6 w-6 p-0'
+						>
+							{previewTheme === 'dark' ? (
+								<Sun className='h-3 w-3' />
+							) : (
+								<Moon className='h-3 w-3' />
+							)}
+						</Button>
 					</div>
 					<div
 						ref={previewRef}
-						className='flex-1 overflow-auto p-4'
+						className={`flex-1 overflow-auto p-4 ${
+							previewTheme === 'dark' ? 'dark bg-gray-900' : 'bg-white'
+						}`}
 						onScroll={() => syncScroll('preview')}
 					>
-						<div className='prose prose-lg prose-gray dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-headings:font-semibold prose-h1:text-3xl prose-h1:mb-6 prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h2:text-2xl prose-h2:mb-4 prose-h2:border-b prose-h2:border-gray-100 dark:prose-h2:border-gray-800 prose-h2:pb-2 prose-h3:text-xl prose-h3:mb-3 prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-950/20 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:my-4 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-table:border-collapse prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600'>
+						<div
+							className={`prose prose-lg max-w-none prose-p:leading-relaxed prose-headings:font-semibold prose-h1:text-3xl prose-h1:mb-6 prose-h1:border-b prose-h1:pb-3 prose-h2:text-2xl prose-h2:mb-4 prose-h2:border-b prose-h2:pb-2 prose-h3:text-xl prose-h3:mb-3 prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-blockquote:border-l-blue-500 prose-blockquote:py-3 prose-blockquote:px-4 prose-blockquote:my-4 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-table:border-collapse ${
+								previewTheme === 'dark'
+									? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-h1:border-gray-700 prose-h2:border-gray-800 prose-blockquote:bg-blue-950/20 prose-code:bg-gray-800 prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-th:border-gray-600 prose-th:bg-gray-800 prose-td:border-gray-600'
+									: 'prose-gray prose-headings:text-gray-900 prose-p:text-gray-700 prose-h1:border-gray-200 prose-h2:border-gray-100 prose-blockquote:bg-blue-50 prose-code:bg-gray-100 prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-th:border-gray-300 prose-th:bg-gray-50 prose-td:border-gray-300'
+							}`}
+						>
 							<ReactMarkdown
 								remarkPlugins={[remarkGfm, remarkMath]}
 								rehypePlugins={[rehypeKatex]}
@@ -431,7 +481,11 @@ export default function MarkdownEditor() {
 										if (!isInline) {
 											return (
 												<SyntaxHighlighter
-													style={tomorrow as any}
+													style={
+														previewTheme === 'dark'
+															? (tomorrow as any)
+															: (oneLight as any)
+													}
 													language={match[1]}
 													PreTag='div'
 													customStyle={{
@@ -440,8 +494,12 @@ export default function MarkdownEditor() {
 														fontSize: '14px',
 														lineHeight: '1.6',
 														padding: '1rem',
-														background: '#2d3748',
-														border: '1px solid #4a5568',
+														background:
+															previewTheme === 'dark' ? '#2d3748' : '#fafafa',
+														border:
+															previewTheme === 'dark'
+																? '1px solid #4a5568'
+																: '1px solid #e2e8f0',
 														fontFamily:
 															'JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
 														fontWeight: '400',
@@ -451,8 +509,12 @@ export default function MarkdownEditor() {
 													lineNumberStyle={{
 														minWidth: '3em',
 														paddingRight: '1em',
-														color: '#718096',
-														borderRight: '1px solid #4a5568',
+														color:
+															previewTheme === 'dark' ? '#718096' : '#94a3b8',
+														borderRight:
+															previewTheme === 'dark'
+																? '1px solid #4a5568'
+																: '1px solid #e2e8f0',
 														marginRight: '1em',
 														textAlign: 'right',
 														userSelect: 'none',
@@ -471,7 +533,11 @@ export default function MarkdownEditor() {
 										} else {
 											return (
 												<code
-													className='bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400 px-2 py-1 rounded text-sm font-mono'
+													className={`px-2 py-1 rounded text-sm font-mono ${
+														previewTheme === 'dark'
+															? 'bg-gray-800 text-pink-400'
+															: 'bg-gray-100 text-pink-600'
+													}`}
 													style={{
 														fontFamily:
 															'JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
@@ -486,76 +552,156 @@ export default function MarkdownEditor() {
 										}
 									},
 									h1: ({ children }) => (
-										<h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 mt-8 first:mt-0 border-b border-gray-200 dark:border-gray-700 pb-3'>
+										<h1
+											className={`text-3xl font-bold mb-6 mt-8 first:mt-0 border-b pb-3 ${
+												previewTheme === 'dark'
+													? 'text-gray-100 border-gray-700'
+													: 'text-gray-900 border-gray-200'
+											}`}
+										>
 											{children}
 										</h1>
 									),
 									h2: ({ children }) => (
-										<h2 className='text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-6 border-b border-gray-100 dark:border-gray-800 pb-2'>
+										<h2
+											className={`text-2xl font-semibold mb-4 mt-6 border-b pb-2 ${
+												previewTheme === 'dark'
+													? 'text-gray-100 border-gray-800'
+													: 'text-gray-900 border-gray-100'
+											}`}
+										>
 											{children}
 										</h2>
 									),
 									h3: ({ children }) => (
-										<h3 className='text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3 mt-5'>
+										<h3
+											className={`text-xl font-semibold mb-3 mt-5 ${
+												previewTheme === 'dark'
+													? 'text-gray-100'
+													: 'text-gray-900'
+											}`}
+										>
 											{children}
 										</h3>
 									),
 									h4: ({ children }) => (
-										<h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 mt-4'>
+										<h4
+											className={`text-lg font-semibold mb-2 mt-4 ${
+												previewTheme === 'dark'
+													? 'text-gray-100'
+													: 'text-gray-900'
+											}`}
+										>
 											{children}
 										</h4>
 									),
 									p: ({ children }) => (
-										<p className='text-gray-700 dark:text-gray-300 mb-4 leading-relaxed'>
+										<p
+											className={`mb-4 leading-relaxed ${
+												previewTheme === 'dark'
+													? 'text-gray-300'
+													: 'text-gray-700'
+											}`}
+										>
 											{children}
 										</p>
 									),
 									ul: ({ children }) => (
-										<ul className='list-disc pl-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300'>
+										<ul
+											className={`list-disc pl-6 mb-4 space-y-2 ${
+												previewTheme === 'dark'
+													? 'text-gray-300'
+													: 'text-gray-700'
+											}`}
+										>
 											{children}
 										</ul>
 									),
 									ol: ({ children }) => (
-										<ol className='list-decimal pl-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300'>
+										<ol
+											className={`list-decimal pl-6 mb-4 space-y-2 ${
+												previewTheme === 'dark'
+													? 'text-gray-300'
+													: 'text-gray-700'
+											}`}
+										>
 											{children}
 										</ol>
 									),
 									li: ({ children }) => (
-										<li className='text-gray-700 dark:text-gray-300'>
+										<li
+											className={
+												previewTheme === 'dark'
+													? 'text-gray-300'
+													: 'text-gray-700'
+											}
+										>
 											{children}
 										</li>
 									),
 									blockquote: ({ children }) => (
-										<blockquote className='border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-950/20 pl-6 py-3 my-4 italic text-gray-700 dark:text-gray-300 rounded-r-lg'>
+										<blockquote
+											className={`border-l-4 border-blue-500 pl-6 py-3 my-4 italic rounded-r-lg ${
+												previewTheme === 'dark'
+													? 'bg-blue-950/20 text-gray-300'
+													: 'bg-blue-50 text-gray-700'
+											}`}
+										>
 											{children}
 										</blockquote>
 									),
 									table: ({ children }) => (
 										<div className='overflow-x-auto my-6'>
-											<table className='min-w-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden text-sm'>
+											<table
+												className={`min-w-full border rounded-lg overflow-hidden text-sm ${
+													previewTheme === 'dark'
+														? 'border-gray-700'
+														: 'border-gray-200'
+												}`}
+											>
 												{children}
 											</table>
 										</div>
 									),
 									thead: ({ children }) => (
-										<thead className='bg-gray-50 dark:bg-gray-800'>
+										<thead
+											className={
+												previewTheme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'
+											}
+										>
 											{children}
 										</thead>
 									),
 									th: ({ children }) => (
-										<th className='border border-gray-200 dark:border-gray-600 px-4 py-3 text-left font-semibold text-gray-900 dark:text-gray-100'>
+										<th
+											className={`border px-4 py-3 text-left font-semibold ${
+												previewTheme === 'dark'
+													? 'border-gray-600 text-gray-100'
+													: 'border-gray-200 text-gray-900'
+											}`}
+										>
 											{children}
 										</th>
 									),
 									td: ({ children }) => (
-										<td className='border border-gray-200 dark:border-gray-600 px-4 py-3 text-gray-700 dark:text-gray-300'>
+										<td
+											className={`border px-4 py-3 ${
+												previewTheme === 'dark'
+													? 'border-gray-600 text-gray-300'
+													: 'border-gray-200 text-gray-700'
+											}`}
+										>
 											{children}
 										</td>
 									),
 									a: ({ children, href }) => (
 										<a
 											href={href}
-											className='text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 transition-colors'
+											className={`underline underline-offset-2 transition-colors ${
+												previewTheme === 'dark'
+													? 'text-blue-400 hover:text-blue-300'
+													: 'text-blue-600 hover:text-blue-800'
+											}`}
 											target={href?.startsWith('http') ? '_blank' : undefined}
 											rel={
 												href?.startsWith('http')
@@ -574,7 +720,13 @@ export default function MarkdownEditor() {
 										/>
 									),
 									hr: () => (
-										<hr className='border-gray-300 dark:border-gray-600 my-8' />
+										<hr
+											className={`my-8 ${
+												previewTheme === 'dark'
+													? 'border-gray-600'
+													: 'border-gray-300'
+											}`}
+										/>
 									),
 									input: ({ type, checked, disabled }) => {
 										if (type === 'checkbox') {
