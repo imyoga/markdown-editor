@@ -339,13 +339,15 @@ export default function MarkdownEditor() {
 	}, [markdown, toast])
 
 	return (
-		<div className='h-screen flex flex-col bg-background'>
+		<div className='h-screen flex flex-col bg-background font-sans'>
 			{/* Header */}
 			<div className='border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
 				<div className='flex items-center justify-between p-4'>
 					<div className='flex items-center gap-2'>
 						<FileText className='h-5 w-5' />
-						<h1 className='text-lg font-semibold'>Markdown Editor</h1>
+						<h1 className='text-lg font-semibold tracking-tight'>
+							Enhanced Markdown Editor
+						</h1>
 					</div>
 					<div className='flex items-center gap-2'>
 						<input
@@ -380,8 +382,8 @@ export default function MarkdownEditor() {
 				{/* Editor Pane */}
 				<div className='w-1/2 border-r flex flex-col'>
 					<div className='bg-muted/50 px-4 py-2 border-b'>
-						<h2 className='text-sm font-medium text-muted-foreground'>
-							Editor
+						<h2 className='text-sm font-medium text-muted-foreground tracking-wide'>
+							EDITOR
 						</h2>
 					</div>
 					<div className='flex-1 relative'>
@@ -390,12 +392,15 @@ export default function MarkdownEditor() {
 							value={markdown}
 							onChange={(e) => setMarkdown(e.target.value)}
 							onScroll={() => syncScroll('editor')}
-							className='absolute inset-0 resize-none border-0 rounded-none focus-visible:ring-0 font-mono text-sm leading-6 p-4'
+							className='absolute inset-0 resize-none border-0 rounded-none focus-visible:ring-0 font-mono text-sm leading-relaxed p-4 bg-gray-50 dark:bg-gray-900'
 							placeholder='Type your markdown here...'
 							style={{
-								lineHeight: '1.5',
+								lineHeight: '1.6',
 								fontSize: '14px',
 								padding: '16px',
+								fontFamily: 'var(--font-mono)',
+								fontWeight: '400',
+								letterSpacing: '0.025em',
 							}}
 						/>
 					</div>
@@ -404,8 +409,8 @@ export default function MarkdownEditor() {
 				{/* Preview Pane */}
 				<div className='w-1/2 flex flex-col bg-white dark:bg-gray-900'>
 					<div className='bg-gray-100 dark:bg-gray-800 px-4 py-2 border-b border-gray-200 dark:border-gray-700'>
-						<h2 className='text-sm font-medium text-gray-600 dark:text-gray-400'>
-							Enhanced Preview
+						<h2 className='text-sm font-medium text-gray-600 dark:text-gray-400 tracking-wide'>
+							ENHANCED PREVIEW
 						</h2>
 					</div>
 					<div
@@ -432,11 +437,15 @@ export default function MarkdownEditor() {
 													customStyle={{
 														margin: 0,
 														borderRadius: '0.5rem',
-														fontSize: '0.875rem',
+														fontSize: '14px',
 														lineHeight: '1.6',
 														padding: '1rem',
 														background: '#2d3748',
 														border: '1px solid #4a5568',
+														fontFamily:
+															'JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
+														fontWeight: '400',
+														letterSpacing: '0.025em',
 													}}
 													showLineNumbers={true}
 													lineNumberStyle={{
@@ -448,6 +457,8 @@ export default function MarkdownEditor() {
 														textAlign: 'right',
 														userSelect: 'none',
 														paddingLeft: '0.5em',
+														fontFamily:
+															'JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
 													}}
 													wrapLines={true}
 													lineProps={{
@@ -460,7 +471,13 @@ export default function MarkdownEditor() {
 										} else {
 											return (
 												<code
-													className='bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400 px-2 py-1 rounded font-mono text-sm'
+													className='bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400 px-2 py-1 rounded text-sm font-mono'
+													style={{
+														fontFamily:
+															'JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
+														fontWeight: '500',
+														letterSpacing: '0.025em',
+													}}
 													{...rest}
 												>
 													{children}
